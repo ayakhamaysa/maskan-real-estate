@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* Colors and fonts. Change them here and they change everywhere */
+@theme {
+  --color-paper: #f7f5f0; /* page background */
+  --color-sand: #ece7df; /* soft boxes */
+  --color-ink: #15191f; /* text and dark parts */
+  --color-muted: #66625b; /* soft text */
+  --color-clay: #c2703d; /* accent (buttons, active pins) */
+  --color-clay-deep: #96522a; /* accent text on light backgrounds */
+  --color-card: #ffffff; /* cards, inputs, pins */
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+}
+
+/* Dark mode: the same names get dark values, so every part of the page follows.
+   "ink" becomes the light text color, and "paper" the dark background. */
+:root[data-theme="dark"] {
+  --color-paper: #12151a;
+  --color-sand: #1d222a;
+  --color-ink: #eceae4;
+  --color-muted: #a19d95;
+  --color-clay-deep: #e0915e;
+  --color-card: #1a1f26;
+  color-scheme: dark;
+}
+/* Parts that must stay dark in both modes (hero, footer, buttons on photos) */
+.always-dark {
+  background-color: #15191f;
+  color: #fff;
+}
+/* The map gets darker too, by inverting the light map colors */
+:root[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.85) saturate(0.6);
+}
+:root[data-theme="dark"] .leaflet-container {
+  background: #1d222a;
+}
+/* Arabic: one Arabic font for everything */
+:root[lang="ar"] body,
+:root[lang="ar"] .font-serif {
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+}
+
+/* Price pins on the map */
+.pin {
+  @apply bg-card text-ink text-xs font-semibold rounded-full px-2.5 py-1 shadow-md border border-ink/10 whitespace-nowrap transition-transform;
+  transform: translate(-50%, -50%);
+  font-family: "Inter", sans-serif;
+}
+.pin.active {
+  @apply bg-clay text-white border-clay;
+  transform: translate(-50%, -50%) scale(1.15);
+}
+/* Leaflet wraps our pin in a div; make that wrapper not add its own box */
+.pin-wrap {
+  background: none;
+  border: none;
+}
+.leaflet-container {
+  font-family: inherit;
+}
