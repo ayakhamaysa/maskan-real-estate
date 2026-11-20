@@ -1,11 +1,18 @@
 # MASKAN — Dubai Real Estate Map (TypeScript)
 
-A bilingual English / Arabic website for homes in Dubai. Price pins on an interactive map stay in sync with the listing cards, with filters, sorting, saved homes, a side-by-side comparison of up to 3 homes (with price per sq ft), WhatsApp and call buttons, and light / dark mode.
+A bilingual English / Arabic website for homes in Dubai, written in strict TypeScript.
 
-**Live:** https://maskan-real-estate.vercel.app
+**Live:** [maskan-real-estate.vercel.app](https://maskan-real-estate.vercel.app) · Part of my [portfolio](https://aya-khamaysa-portfolio.vercel.app)
 
-## Built with
-React 19 · **TypeScript (strict)** · Vite · Tailwind CSS v4 · React Leaflet + OpenStreetMap · Framer Motion
+![MASKAN — Dubai Real Estate Map (TypeScript)](docs/preview.webp)
+
+## Highlights
+
+- **Interactive map:** price pins on OpenStreetMap stay in sync with the listing cards (hover one, the other lights up).
+- **Filters and sorting:** rent / buy, area, bedrooms, max price; sort by price or size.
+- **Saved homes** (♥), remembered in the browser.
+- **Compare up to 3 homes** side by side, including price per sq ft.
+- WhatsApp and call buttons on every home, light / dark mode, English / Arabic (RTL).
 
 ## TypeScript
 The project was migrated from JavaScript to TypeScript in strict mode.
@@ -16,7 +23,12 @@ The project was migrated from JavaScript to TypeScript in strict mode.
 - Values read from `localStorage` are validated before use.
 - `npm run build` type-checks first, so a type error never reaches production.
 
-## Run it
+## Built with
+
+React 19 · **TypeScript (strict)** · Vite · Tailwind CSS v4 · React Leaflet + OpenStreetMap · Framer Motion
+
+## Run locally
+
 ```bash
 npm install
 npm run dev        # local development
@@ -24,4 +36,12 @@ npm run typecheck  # TypeScript check only
 npm run build      # type-check + production build
 ```
 
-Concept project · Designed & built by [One Click](https://www.instagram.com/oneclick.ps)
+## Edit
+- Agency, areas and homes: `src/data/homes.ts`
+- Texts (English / Arabic): `src/data/ui.ts`
+
+> MASKAN is a fictional agency for a portfolio concept.
+
+---
+
+Designed & built by **Aya Khamaysa** · [Portfolio](https://aya-khamaysa-portfolio.vercel.app) · [LinkedIn](https://www.linkedin.com/in/ayakhamaysa) · [One Click](https://www.instagram.com/oneclick.ps)
