@@ -1,21 +1,31 @@
+import type { ChangeEvent } from "react";
 import { areas } from "../data/homes";
 import { ui, maxPrices } from "../data/ui";
 import { shortPrice } from "../format";
+import type { Deal, Filters, Lang } from "../types";
+
+export interface FilterProps {
+  lang: Lang;
+  filters: Filters;
+  setFilters: (filters: Filters) => void;
+  dark?: boolean;
+}
 
 // The shared filter inputs (used in the hero search and in the results bar)
-// filters = { deal, area, beds, maxPrice }
-export default function FilterFields({ lang, filters, setFilters, dark = false }) {
+// filters = { deal, area, beds, maxPrice } (the Filters type in types.ts)
+export default function FilterFields({ lang, filters, setFilters, dark = false }: FilterProps) {
   const t = ui[lang];
   const field = `rounded-full px-4 py-2.5 text-sm outline-none cursor-pointer ${
     dark ? "bg-white/10 text-white border border-white/20 [&>option]:text-black" : "bg-card border border-ink/15"
   }`;
-  const set = (key) => (e) => setFilters({ ...filters, [key]: e.target.value });
+  // keyof Filters: only a real filter name is allowed ("area", "beds"...)
+  const set = (key: "area" | "beds" | "maxPrice") => (e: ChangeEvent<HTMLSelectElement>) => setFilters({ ...filters, [key]: e.target.value });
 
   return (
     <>
       {/* Rent / Buy switch */}
       <div className={`flex rounded-full p-1 ${dark ? "bg-white/10" : "bg-sand"}`}>
-        {["rent", "sale"].map((deal) => (
+        {(["rent", "sale"] as Deal[]).map((deal) => (
           <button
             key={deal}
             type="button"

@@ -1,10 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { motion } from "framer-motion";
 
+// What the Modal needs from the component that opens it ("?" = optional)
+interface ModalProps {
+  onClose: () => void; // a function that takes nothing and returns nothing
+  closeLabel: string;
+  children: ReactNode; // anything React can show
+  wide?: boolean;
+}
+
 // A window on top of the page. Closes with the × button, the Esc key, or a click outside.
-export default function Modal({ onClose, closeLabel, children, wide = false }) {
+export default function Modal({ onClose, closeLabel, children, wide = false }: ModalProps) {
   useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden"; // stop the page behind from scrolling
     return () => {

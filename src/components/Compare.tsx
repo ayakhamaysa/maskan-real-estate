@@ -3,9 +3,17 @@ import { ui } from "../data/ui";
 import { fullPrice } from "../format";
 import HomePhoto from "./HomePhoto";
 import Modal from "./Modal";
+import type { Home, Lang } from "../types";
+
+interface CompareBarProps {
+  picked: Home[];
+  lang: Lang;
+  onOpen: () => void;
+  onClear: () => void;
+}
 
 // The bar at the bottom while homes are picked for comparing
-export function CompareBar({ picked, lang, onOpen, onClear }) {
+export function CompareBar({ picked, lang, onOpen, onClear }: CompareBarProps) {
   const t = ui[lang];
   if (picked.length === 0) return null;
   return (
@@ -18,11 +26,7 @@ export function CompareBar({ picked, lang, onOpen, onClear }) {
       <button onClick={onClear} className="text-sm text-white/70 hover:text-white">
         {t.clear}
       </button>
-      <button
-        onClick={onOpen}
-        disabled={picked.length < 2}
-        className="ms-auto bg-clay-deep rounded-full px-5 py-2 text-sm font-semibold disabled:opacity-50"
-      >
+      <button onClick={onOpen} disabled={picked.length < 2} className="ms-auto bg-clay-deep rounded-full px-5 py-2 text-sm font-semibold disabled:opacity-50">
         {t.compareCount(picked.length)}
       </button>
     </div>
@@ -30,10 +34,11 @@ export function CompareBar({ picked, lang, onOpen, onClear }) {
 }
 
 // The comparing table: one column for each home
-export function CompareModal({ picked, lang, onClose }) {
+export function CompareModal({ picked, lang, onClose }: { picked: Home[]; lang: Lang; onClose: () => void }) {
   const t = ui[lang];
   const ar = lang === "ar";
-  const rows = [
+  // Each row: [its label, a function that gives the value for one home]
+  const rows: [string, (h: Home) => string | number][] = [
     [t.rowLabels.price, (h) => fullPrice(h.price, lang) + (h.deal === "rent" ? ` ${t.perYear}` : "")],
     [t.pricePerSqft, (h) => fullPrice(Math.round(h.price / h.size), lang)],
     [t.rowLabels.type, (h) => types[h.type][lang]],

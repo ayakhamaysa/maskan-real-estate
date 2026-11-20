@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import type { Theme } from "./types";
 
 // Light / dark mode. First visit follows the device setting, then remembers the choice.
 export function useTheme() {
-  const [theme, setTheme] = useState(() => {
+  // useState<Theme>: the theme can only ever be "light" or "dark"
+  const [theme, setTheme] = useState<Theme>(() => {
     try {
       const saved = localStorage.getItem("theme");
-      if (saved) return saved;
+      // the browser storage can hold any text, so we check it before trusting it
+      if (saved === "light" || saved === "dark") return saved;
     } catch {
       // private mode
     }

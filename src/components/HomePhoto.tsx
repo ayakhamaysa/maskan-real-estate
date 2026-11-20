@@ -1,7 +1,8 @@
 import { useState } from "react";
+import type { Home } from "../types";
 
 // The home photo. Until the photo file exists, it shows a soft colored box with a house icon.
-export default function HomePhoto({ home, className = "" }) {
+export default function HomePhoto({ home, className = "" }: { home: Home; className?: string }) {
   const [missing, setMissing] = useState(false);
 
   if (missing) {

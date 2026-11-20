@@ -13,6 +13,7 @@ import MapView from "./components/MapView";
 import HomeDetail from "./components/HomeDetail";
 import { CompareBar, CompareModal } from "./components/Compare";
 import Footer from "./components/Footer";
+import type { Filters, Home, SortKey } from "./types";
 
 export default function App() {
   const { lang, toggle } = useLanguage();
@@ -20,33 +21,35 @@ export default function App() {
   const { saved, toggleSaved } = useSaved();
   const { theme, toggleTheme } = useTheme();
 
-  const [filters, setFilters] = useState({ deal: "rent", area: "", beds: "", maxPrice: "" });
-  const [sort, setSort] = useState("recommended");
+  // <Filters>, <SortKey>... tell TypeScript what each piece of state may hold
+  const [filters, setFilters] = useState<Filters>({ deal: "rent", area: "", beds: "", maxPrice: "" });
+  const [sort, setSort] = useState<SortKey>("recommended");
   const [onlySaved, setOnlySaved] = useState(false);
-  const [mobileView, setMobileView] = useState("list"); // "list" or "map" on phones
-  const [hoveredId, setHoveredId] = useState(null); // card or pin under the mouse
-  const [openHome, setOpenHome] = useState(null); // home shown in the detail window
-  const [compareIds, setCompareIds] = useState([]);
+  const [mobileView, setMobileView] = useState<"list" | "map">("list"); // "list" or "map" on phones
+  const [hoveredId, setHoveredId] = useState<number | null>(null); // card or pin under the mouse
+  const [openHome, setOpenHome] = useState<Home | null>(null); // home shown in the detail window
+  const [compareIds, setCompareIds] = useState<number[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
   const [note, setNote] = useState(""); // small message, e.g. "up to 3 homes"
 
   // The homes that match the filters, in the chosen order
   const results = useMemo(() => {
-    const list = homes.filter(
-      (h) =>
-        h.deal === filters.deal &&
-        (!filters.area || h.area === filters.area) &&
-        (filters.beds === "" || (filters.beds === "0" ? h.beds === 0 : h.beds >= Number(filters.beds))) &&
-        (!filters.maxPrice || h.price <= Number(filters.maxPrice)) &&
-        (!onlySaved || saved.includes(h.id))
-    );
+    const list = onlySaved
+      ? homes.filter((h) => saved.includes(h.id))
+      : homes.filter(
+          (h) =>
+            h.deal === filters.deal &&
+            (!filters.area || h.area === filters.area) &&
+            (filters.beds === "" || (filters.beds === "0" ? h.beds === 0 : h.beds >= Number(filters.beds))) &&
+            (!filters.maxPrice || h.price <= Number(filters.maxPrice)),
+        );
     if (sort === "low") list.sort((a, b) => a.price - b.price);
     if (sort === "high") list.sort((a, b) => b.price - a.price);
     if (sort === "size") list.sort((a, b) => b.size - a.size);
     return list;
   }, [filters, sort, onlySaved, saved]);
 
-  function toggleCompare(id) {
+  function toggleCompare(id: number) {
     if (compareIds.includes(id)) return setCompareIds(compareIds.filter((x) => x !== id));
     if (compareIds.length >= 3) {
       setNote(t.compareMax);
@@ -56,7 +59,7 @@ export default function App() {
     setCompareIds([...compareIds, id]);
   }
 
-  const goToResults = () => document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+  const goToResults = () => document.getElementById("results")?.scrollIntoView({ behavior: "smooth" }); // "?." = only if it exists
   const picked = homes.filter((h) => compareIds.includes(h.id));
 
   return (
@@ -81,7 +84,12 @@ export default function App() {
           {/* Phones: one row that slides sideways. Big screens: wraps normally */}
           <div className="max-w-7xl mx-auto px-5 py-3 flex items-center gap-2 overflow-x-auto lg:flex-wrap [scrollbar-width:none] [&>*]:shrink-0">
             <FilterFields lang={lang} filters={filters} setFilters={setFilters} />
-            <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort" className="rounded-full px-4 py-2.5 text-sm bg-card border border-ink/15">
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              aria-label="Sort"
+              className="rounded-full px-4 py-2.5 text-sm bg-card border border-ink/15"
+            >
               {Object.entries(t.sort).map(([key, label]) => (
                 <option key={key} value={key}>
                   {label}

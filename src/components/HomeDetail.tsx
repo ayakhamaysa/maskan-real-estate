@@ -1,13 +1,23 @@
-import { agency, areas, types, featuresAr } from "../data/homes";
+import { areas, types, featuresAr } from "../data/homes";
 import { ui } from "../data/ui";
 import { fullPrice, countLabel } from "../format";
 import HomePhoto from "./HomePhoto";
 import Modal from "./Modal";
+import { contactLinks } from "../contact";
+import type { Home, Lang } from "../types";
 
-export default function HomeDetail({ home, lang, saved, onSave, onClose }) {
+interface HomeDetailProps {
+  home: Home;
+  lang: Lang;
+  saved: boolean;
+  onSave: (id: number) => void;
+  onClose: () => void;
+}
+
+export default function HomeDetail({ home, lang, saved, onSave, onClose }: HomeDetailProps) {
   const t = ui[lang];
   const ar = lang === "ar";
-  const whatsapp = `https://wa.me/${agency.whatsapp}?text=${encodeURIComponent(t.whatsappText(home))}`;
+  const links = contactLinks(home, lang); // the same WhatsApp / call links as the cards
 
   return (
     <Modal onClose={onClose} closeLabel={t.close}>
@@ -49,10 +59,10 @@ export default function HomeDetail({ home, lang, saved, onSave, onClose }) {
         </div>
 
         <div className="flex flex-wrap gap-3 mt-8">
-          <a href={whatsapp} target="_blank" className="flex-1 text-center bg-[#1f9e55] text-white font-semibold rounded-full px-6 py-3">
+          <a href={links.whatsapp} target="_blank" rel="noreferrer" className="flex-1 text-center bg-[#1f9e55] text-white font-semibold rounded-full px-6 py-3">
             {t.contact}
           </a>
-          <a href={`tel:+${agency.whatsapp}`} className="border border-ink/20 rounded-full px-6 py-3">
+          <a href={links.call} className="border border-ink/20 rounded-full px-6 py-3">
             📞 {t.call}
           </a>
           <button onClick={() => onSave(home.id)} aria-pressed={saved} className="border border-ink/20 rounded-full px-6 py-3">

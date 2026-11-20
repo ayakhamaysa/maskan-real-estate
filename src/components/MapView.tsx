@@ -4,9 +4,10 @@ import L from "leaflet";
 import { ui } from "../data/ui";
 import { shortPrice } from "../format";
 import { contactLinks } from "../contact";
+import type { Home, Lang } from "../types";
 
 // A price pin instead of the default blue marker
-function pinIcon(home, active) {
+function pinIcon(home: Home, active: boolean): L.DivIcon {
   return L.divIcon({
     className: "pin-wrap",
     html: `<div class="pin ${active ? "active" : ""}">${shortPrice(home.price)}</div>`,
@@ -15,18 +16,27 @@ function pinIcon(home, active) {
 }
 
 // When the filters change (or the map appears on a phone), zoom to show all the homes in the list
-function FitToHomes({ homes, shownOn }) {
+function FitToHomes({ homes, shownOn }: { homes: Home[]; shownOn: "list" | "map" }) {
   const map = useMap();
   useEffect(() => {
     map.invalidateSize(); // the map was hidden on phones, so measure its size again
     if (homes.length === 0) return;
-    const bounds = L.latLngBounds(homes.map((h) => [h.lat, h.lng]));
+    const bounds = L.latLngBounds(homes.map((h): L.LatLngTuple => [h.lat, h.lng]));
     map.fitBounds(bounds, { padding: [60, 60], maxZoom: 14 });
   }, [homes, map, shownOn]);
   return null;
 }
 
-export default function MapView({ homes, lang, activeId, onHover, onOpen, shownOn }) {
+interface MapViewProps {
+  homes: Home[];
+  lang: Lang;
+  activeId: number | null;
+  onHover: (id: number | null) => void;
+  onOpen: (home: Home) => void;
+  shownOn: "list" | "map";
+}
+
+export default function MapView({ homes, lang, activeId, onHover, onOpen, shownOn }: MapViewProps) {
   const t = ui[lang];
   return (
     // dir="ltr": the map library works left to right, even on the Arabic page
@@ -56,7 +66,12 @@ export default function MapView({ homes, lang, activeId, onHover, onOpen, shownO
                   <button onClick={() => onOpen(home)} className="flex-1 bg-[#15191f] text-white rounded-full py-1.5 text-xs">
                     {t.view}
                   </button>
-                  <a href={contactLinks(home, lang).whatsapp} target="_blank" className="flex-1 text-center bg-[#25d366] !text-white rounded-full py-1.5 text-xs">
+                  <a
+                    href={contactLinks(home, lang).whatsapp}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 text-center bg-[#25d366] !text-white rounded-full py-1.5 text-xs"
+                  >
                     WhatsApp
                   </a>
                 </div>

@@ -1,7 +1,8 @@
 import { agency } from "../data/homes";
 import { ui } from "../data/ui";
+import type { Lang } from "../types";
 
-export default function Footer({ lang }) {
+export default function Footer({ lang }: { lang: Lang }) {
   return (
     <footer className="always-dark text-white/70 text-sm">
       <div className="max-w-7xl mx-auto px-5 py-10 flex flex-col sm:flex-row gap-3 justify-between">
@@ -11,7 +12,7 @@ export default function Footer({ lang }) {
         </div>
         <p>
           {ui[lang].madeBy}{" "}
-          <a href="https://www.instagram.com/oneclick.ps" target="_blank" className="font-semibold text-white">
+          <a href="https://www.instagram.com/oneclick.ps" target="_blank" rel="noreferrer" className="font-semibold text-white">
             One Click
           </a>
         </p>

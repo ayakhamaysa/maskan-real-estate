@@ -3,17 +3,28 @@ import { ui } from "../data/ui";
 import { fullPrice, countLabel } from "../format";
 import HomePhoto from "./HomePhoto";
 import { contactLinks } from "../contact";
+import type { Home, Lang } from "../types";
+
+interface HomeCardProps {
+  home: Home;
+  lang: Lang;
+  active: boolean; // the mouse is on its pin or card
+  saved: boolean;
+  comparing: boolean;
+  onHover: (id: number | null) => void; // null = the mouse left
+  onOpen: (home: Home) => void;
+  onSave: (id: number) => void;
+  onCompare: (id: number) => void;
+}
 
 // One home in the list
-export default function HomeCard({ home, lang, active, saved, comparing, onHover, onOpen, onSave, onCompare }) {
+export default function HomeCard({ home, lang, active, saved, comparing, onHover, onOpen, onSave, onCompare }: HomeCardProps) {
   const t = ui[lang];
   return (
     <article
       onMouseEnter={() => onHover(home.id)}
       onMouseLeave={() => onHover(null)}
-      className={`group bg-card rounded-2xl overflow-hidden border transition-shadow ${
-        active ? "border-clay shadow-lg" : "border-ink/10 hover:shadow-lg"
-      }`}
+      className={`group bg-card rounded-2xl overflow-hidden border transition-shadow ${active ? "border-clay shadow-lg" : "border-ink/10 hover:shadow-lg"}`}
     >
       <div className="relative">
         <button onClick={() => onOpen(home)} className="block w-full" aria-label={t.view}>
@@ -56,6 +67,7 @@ export default function HomeCard({ home, lang, active, saved, comparing, onHover
           <a
             href={contactLinks(home, lang).whatsapp}
             target="_blank"
+            rel="noreferrer"
             className="flex items-center justify-center gap-2 bg-[#1f9e55] text-white rounded-full py-2 text-sm font-semibold hover:bg-[#178a49]"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor" aria-hidden="true">

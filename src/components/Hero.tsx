@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { ui } from "../data/ui";
-import FilterFields from "./FilterFields";
+import FilterFields, { type FilterProps } from "./FilterFields";
 
-export default function Hero({ lang, filters, setFilters, onSearch }) {
+// The same props as the filters, plus what happens when the visitor presses Search
+type HeroProps = Omit<FilterProps, "dark"> & { onSearch: () => void };
+
+export default function Hero({ lang, filters, setFilters, onSearch }: HeroProps) {
   const t = ui[lang];
   return (
     <section id="top" className="relative overflow-hidden always-dark">

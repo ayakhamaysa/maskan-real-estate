@@ -8,10 +8,11 @@ import "@fontsource/ibm-plex-sans-arabic/400.css";
 import "@fontsource/ibm-plex-sans-arabic/600.css";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
-import App from "./App.jsx";
+import App from "./App";
 
-createRoot(document.getElementById("root")).render(
+// "!" tells TypeScript: the #root div is always in index.html, it is never missing
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 );

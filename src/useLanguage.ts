@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import type { Lang } from "./types";
 
 // Remembers the chosen language and flips the whole page
 export function useLanguage() {
-  const [lang, setLang] = useState(() => {
+  const [lang, setLang] = useState<Lang>(() => {
     try {
-      return localStorage.getItem("lang") || "en";
+      // only "ar" or "en" are accepted, anything else falls back to English
+      return localStorage.getItem("lang") === "ar" ? "ar" : "en";
     } catch {
       return "en";
     }
